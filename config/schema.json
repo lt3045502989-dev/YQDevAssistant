@@ -1,0 +1,54 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "app": {
+            "type": "object",
+            "properties": {
+                "name": {"type": "string"},
+                "version": {"type": "string"},
+                "language": {"type": "string", "enum": ["zh-CN", "en-US"]},
+                "log_level": {"type": "string", "enum": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]}
+            },
+            "required": ["name", "version", "language", "log_level"]
+        },
+        "services": {
+            "type": "object",
+            "properties": {
+                "proxy": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {"type": "boolean"},
+                        "http": {"type": "string", "format": "uri"},
+                        "https": {"type": "string", "format": "uri"}
+                    },
+                    "required": ["enabled"]
+                },
+                "github": {
+                    "type": "object",
+                    "properties": {
+                        "api_base": {"type": "string"},
+                        "token_env_var": {"type": "string"},
+                        "user": {"type": "string"}
+                    },
+                    "required": ["api_base", "token_env_var", "user"]
+                }
+            },
+            "required": ["proxy", "github"]
+        },
+        "paths": {
+            "type": "object",
+            "properties": {
+                "logs_dir": {"type": "string"},
+                "backups_dir": {"type": "string"},
+                "data_dir": {"type": "string"}
+            },
+            "required": ["logs_dir", "backups_dir", "data_dir"]
+        },
+        "modules": {
+            "type": "object",
+            "additionalProperties": true
+        }
+    },
+    "required": ["app", "services", "paths"]
+}

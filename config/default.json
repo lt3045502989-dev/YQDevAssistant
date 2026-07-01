@@ -1,0 +1,26 @@
+{
+    "app": {
+        "name": "YQDevAssistant",
+        "version": "0.1.0",
+        "language": "zh-CN",
+        "log_level": "INFO"
+    },
+    "services": {
+        "proxy": {
+            "enabled": true,
+            "http": "http://127.0.0.1:7897",
+            "https": "http://127.0.0.1:7897"
+        },
+        "github": {
+            "api_base": "https://api.github.com",
+            "token_env_var": "GITHUB_TOKEN",
+            "user": "lt3045502989-dev"
+        }
+    },
+    "paths": {
+        "logs_dir": "logs",
+        "backups_dir": "backups",
+        "data_dir": "~/.yqa"
+    },
+    "modules": {}
+}
