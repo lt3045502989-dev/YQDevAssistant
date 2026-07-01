@@ -126,13 +126,13 @@ def format_module_result(result: "ModuleResult", verbose: bool = False) -> str:
 
     # Status line
     if result.is_ok:
-        status_icon = "✅"
+        status_icon = "[PASS]"
         status_text = "PASS"
     elif result.success and result.has_errors:
-        status_icon = "⚠️"
+        status_icon = "[WARN]"
         status_text = "PARTIAL"
     else:
-        status_icon = "❌"
+        status_icon = "[FAIL]"
         status_text = "FAIL"
 
     header = f"{status_icon} {result.module_name} — {status_text}"

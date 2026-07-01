@@ -50,6 +50,9 @@ def run_command(
         the system default encoding with 'replace' for characters
         that can't be decoded.
     """
+    # On Windows, many CLI tools are .cmd/.bat files (npm, pnpm, code, etc.).
+    # subprocess.run with a list can't execute .cmd files directly.
+    # We try list-style first (safer), then fall back to shell=True.
     try:
         result = subprocess.run(
             args,
@@ -61,10 +64,27 @@ def run_command(
             errors="replace",
         )
         return result.returncode, result.stdout.strip(), result.stderr.strip()
+    except FileNotFoundError:
+        # On Windows, the command might be a .cmd file — retry with shell=True
+        try:
+            cmd_str = " ".join(args)
+            result = subprocess.run(
+                cmd_str,
+                shell=True,
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+                cwd=str(cwd) if cwd else None,
+                encoding="utf-8",
+                errors="replace",
+            )
+            return result.returncode, result.stdout.strip(), result.stderr.strip()
+        except subprocess.TimeoutExpired:
+            return -1, "", f"Command timed out after {timeout}s: {' '.join(args)}"
+        except Exception as e:
+            return -1, "", f"Command failed: {args[0]} — {e}"
     except subprocess.TimeoutExpired:
         return -1, "", f"Command timed out after {timeout}s: {' '.join(args)}"
-    except FileNotFoundError:
-        return -1, "", f"Command not found: {args[0]}"
     except Exception as e:
         return -1, "", str(e)
 
